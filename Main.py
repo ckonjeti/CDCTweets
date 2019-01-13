@@ -1,3 +1,5 @@
+#TODO: Add dates for data, Figure out which criteria to write to CSV file
+
 import sys
 if sys.version_info[0] < 3:
     import got
@@ -47,7 +49,6 @@ while x < len(andListNew):
             for y in range(len(andListNew[x + 1])):
                 keywords.append((z + ' ' + andListNew[x + 1][y]))
     x += 1             
-
 
 
 def printTweet(descr, t):
