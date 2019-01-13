@@ -42,10 +42,10 @@ def main(argv):
 
 			elif opt == '--maxtweets':
 				tweetCriteria.maxTweets = int(arg)
-			
+
 			elif opt == '--near':
 				tweetCriteria.near = '"' + arg + '"'
-			
+
 			elif opt == '--within':
 				tweetCriteria.within = '"' + arg + '"'
 
@@ -54,7 +54,7 @@ def main(argv):
 
 			elif opt == '--output':
 				outputFileName = arg
-				
+
 		outputFile = codecs.open(outputFileName, "w+", "utf-8")
 
 		outputFile.write('username;date;retweets;favorites;text;geo;mentions;hashtags;id;permalink')
