@@ -4,7 +4,7 @@ if sys.version_info[0] < 3:
 else:
     import got3 as got
 import re
-import sys,getopt,datetime,codecs,xlsxwriter 
+import sys,getopt,datetime,codecs,xlsxwriter,csv 
 #opens file and splits every word by the delimiter OR
 filename = "C:\Users\Chaitu Konjeti\CDCTweets\Keywords.txt"
 
@@ -57,11 +57,12 @@ def printTweet(descr, t):
 	print("Hashtags: %s\n" % t.hashtags)
 
 
-#tweetCriteria = got.manager.TweetCriteria()
-#outputFileName = "output_got.csv"
-workbook = xlsxwriter.Workbook('Tweets.xlsx')
-worksheet = workbook.add_worksheet()
-#outputFile = codecs.open(outputFileName, "w+", "utf-8")
+tweetCriteria = got.manager.TweetCriteria()
+outputFileName = "output_got.csv"
+#workbook = xlsxwriter.Workbook('Tweets.xlsx')
+#worksheet = workbook.add_worksheet()
+outputFile = codecs.open(outputFileName, "w+", "utf-8")
+dataWriter = csv.writer(outputFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 i = 0
 maxTweets = 5
@@ -73,15 +74,12 @@ for i in range(5):
     for j in range(maxTweets):
         tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setMaxTweets(5)
         tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
-#        criteriaList = (['username', tweet.username])
-#        for desc, name in criteriaList:
-#            worksheet.write(row, col, desc)
-#            worksheet.write(row, col+1, name)
-##            worksheet.write(row, col+1, rt)
-##            worksheet.write(row, col+2, txt)
+        row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.retweets, tweet.text]]
+        dataWriter.writerow(row)
+#        
 #            
 #        row += 1
-        printTweet("Get tweets by query search " + keywords[i], tweet)
+        #printTweet("Get tweets by query search " + keywords[i], tweet)
    
 #workbook.close()
 
