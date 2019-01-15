@@ -7,48 +7,13 @@ else:
     import got3 as got
 import re
 import sys,codecs,csv 
-
+import functions as f
 
 #opens file and splits every word by the delimiter OR
 filename = "C:\Users\Chaitu Konjeti\CDCTweets\Keywords.txt"
 
 
-#final sorted list
-keywords = []
-
-#lists used during sorting
-preKeywords = []
-andList = []
-andListNew = []
-
-#sorts into AND and not AND sections
-with open(filename, 'r') as f:
-    for line in f:
-        for word in re.split('\(\(|\)\)',line):
-            if str(word).find('AND') > 0:
-                andList.append(str(word))
-            elif word != ' OR ':
-                preKeywords.append(word)
-                
-#sorts the non AND section and appends the final product to keywords
-for x in preKeywords:
-    for x in (x.split(' OR ')):
-        if x != '':            
-            keywords.append(str(x.replace("\"","")))
-            
-#sorts the AND section into groups            
-for x in andList:
-    for y in x.split(' AND '):
-        andListNew.append(y.replace("(","").replace(")","").replace("\"","").split(" OR "))
-     
-#sorts the AND section groups and appends the final product to keywords
-x = 0
-while x < len(andListNew):
-    if x % 2 == 0:
-        for z in andListNew[x]:
-            for y in range(len(andListNew[x + 1])):
-                keywords.append((z + ' ' + andListNew[x + 1][y]))
-    x += 1             
+keywords = f.sortKeyword(filename)
 
 
 def printTweet(descr, t):
@@ -68,14 +33,21 @@ outputFile = codecs.open(outputFileName, "w+", "utf-8")
 dataWriter = csv.writer(outputFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 i = 0
+j = 0
 maxTweets = 5
-
+#Start and end dates for range of dates for twitter data collection
+startDate = "2015-09-10"
+endDate = "2015-09-12"
+#tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setSince(startDate).setUntil(endDate).setMaxTweets(5)
+#tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
+#criteria = [keywords[i], tweet.username, tweet.retweets, tweet.text]
 #finds maxTweets number of tweets for each keyword and writes to CSV file
 for i in range(5):
     for j in range(maxTweets):
         tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setMaxTweets(5)
         tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
-        row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.retweets, tweet.text]]
+        row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.text, tweet.date, tweet.retweets, tweet.mentions, tweet.hashtags]]
+        #print(tweet)
         dataWriter.writerow(row)
 
 
