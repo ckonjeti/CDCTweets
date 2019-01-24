@@ -1,10 +1,9 @@
-#TODO: Add dates for data, Figure out which criteria to write to CSV file
-
 import sys
 if sys.version_info[0] < 3:
     import got
 else:
     import got3 as got
+import re
 import sys,codecs,csv 
 import functions as f
 
@@ -13,7 +12,7 @@ filename = "C:\Users\Chaitu Konjeti\CDCTweets\Keywords.txt"
 
 
 keywords = f.sortKeyword(filename)
-#print(keywords)
+
 
 def printTweet(descr, t):
 	print(descr)
@@ -32,26 +31,13 @@ outputFile = codecs.open(outputFileName, "w+", "utf-8")
 dataWriter = csv.writer(outputFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 i = 0
-j = 0
-maxTweets = 5
-#Start and end dates for range of dates for twitter data collection
-startDate = "2015-09-10"
-endDate = "2015-09-12"
-#tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setSince(startDate).setUntil(endDate).setMaxTweets(5)
-#tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
-#criteria = [keywords[i], tweet.username, tweet.retweets, tweet.text]
+maxTweets = 1
+
 #finds maxTweets number of tweets for each keyword and writes to CSV file
-for i in range(5):
-    for j in range(5):
-        tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setMaxTweets(5)
-        tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
-        row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.retweets, tweet.text]]
-        printTweet('tweet',tweet)
-        #dataWriter.writerow(row)
-
-
-
-
-#keywords[i], tweet.id, tweet.permalink, tweet.username, tweet.text, tweet.date, tweet.retweets, tweet.favorites, tweet.mentions, tweet.hashtags, tweet.geo
-
-
+for i in range(len(keywords)):
+    for j in range(maxTweets):
+        tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setSince("2010-01-01").setUntil("2010-06-01").setMaxTweets(maxTweets)
+        if(len(got.manager.TweetManager.getTweets(tweetCriteria)) != 0):
+            tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
+            row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.retweets, tweet.text, tweet.id, tweet.permalink, tweet.date, tweet.favorites, tweet.mentions, tweet.hashtags, tweet.geo]]
+            dataWriter.writerow(row)
