@@ -4,7 +4,7 @@ if sys.version_info[0] < 3:
 else:
     import got3 as got
 #mport re
-import sys,codecs,csv
+import codecs,csv
 import functions as f
 #mport time
 #opens file and splits every word by the delimiter OR
