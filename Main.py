@@ -32,12 +32,17 @@ dataWriter = csv.writer(outputFile, delimiter=',', quotechar='"', quoting=csv.QU
 
 i = 0
 maxTweets = 1
-
+posts = []
 #finds maxTweets number of tweets for each keyword and writes to CSV file
 for i in range(len(keywords)):
-    for j in range(maxTweets):
-        tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setSince("2010-01-01").setUntil("2010-06-01").setMaxTweets(maxTweets)
-        if(len(got.manager.TweetManager.getTweets(tweetCriteria)) != 0):
-            tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
-            row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.retweets, tweet.text, tweet.id, tweet.permalink, tweet.date, tweet.favorites, tweet.mentions, tweet.hashtags, tweet.geo]]
-            dataWriter.writerow(row)
+    tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setSince("2010-01-01").setUntil("2010-06-01").setMaxTweets(maxTweets)
+    if(len(got.manager.TweetManager.getTweets(tweetCriteria)) != 0):
+        tweet = got.manager.TweetManager.getTweets(tweetCriteria)
+        posts.append(tweet)
+#print(posts)
+for line in posts:
+    #print(line)
+    for i in range(len(line)):
+        #printTweet('tweet', line[i])
+        row = [repr(s).encode("utf-8") for s in [line[i].username, line[i].retweets, line[i].text, line[i].id, line[i].permalink, line[i].date, line[i].favorites, line[i].mentions, line[i].hashtags, line[i].geo]]
+        dataWriter.writerow(row)
