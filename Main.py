@@ -5,7 +5,6 @@ if sys.version_info[0] < 3:
     import got
 else:
     import got3 as got
-import re
 import sys,codecs,csv 
 import functions as f
 
@@ -14,7 +13,7 @@ filename = "C:\Users\Chaitu Konjeti\CDCTweets\Keywords.txt"
 
 
 keywords = f.sortKeyword(filename)
-
+#print(keywords)
 
 def printTweet(descr, t):
 	print(descr)
@@ -43,15 +42,16 @@ endDate = "2015-09-12"
 #criteria = [keywords[i], tweet.username, tweet.retweets, tweet.text]
 #finds maxTweets number of tweets for each keyword and writes to CSV file
 for i in range(5):
-    for j in range(maxTweets):
+    for j in range(5):
         tweetCriteria = got.manager.TweetCriteria().setQuerySearch(keywords[i]).setMaxTweets(5)
         tweet = got.manager.TweetManager.getTweets(tweetCriteria)[j] 
-        row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.text, tweet.date, tweet.retweets, tweet.mentions, tweet.hashtags]]
-        #print(tweet)
-        dataWriter.writerow(row)
+        row = [repr(s).encode("utf-8") for s in [keywords[i], tweet.username, tweet.retweets, tweet.text]]
+        printTweet('tweet',tweet)
+        #dataWriter.writerow(row)
 
 
 
 
+#keywords[i], tweet.id, tweet.permalink, tweet.username, tweet.text, tweet.date, tweet.retweets, tweet.favorites, tweet.mentions, tweet.hashtags, tweet.geo
 
 
